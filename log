@@ -1,8 +1,13 @@
+# Ubuntu requirements. Use dnf for CentOS
 sudo apt update
 sudo apt upgrade
 sudo apt install nodejs
 sudo apt install npm
 
+
 npm init
 npm install express
+
+npm install # After git clone
+
 
