@@ -1,0 +1,24 @@
+This document shows how to open a TCP port on firewalld (using a service instead of explicitly opening the port)
+
+# Add express_app.xml to /usr/lib/firewalld/services/
+sudo cp express_app.xml /usr/lib/firewalld/services/
+
+# This directory is where the service definitions for firewalld are stored. express_app.xml
+# Simply specifies the port 3000 (via TCP) with some meta data so that we remember what the port is used for
+
+# Reload firewall rules to make express_app service visible:
+sudo firewall-cmd --reload
+
+# Check if express_app service is available 
+sudo firewall-cmd --get-services
+
+# Add the express_app service (--permanent should be added after the configuration is tested, via curl or otherwise)
+sudo firewall-cmd --zone=public --add-service=express_app --permanent
+
+# List services of zone to confirm express_app was added. 
+sudo firewall-cmd --zone=public --list-services
+
+# Restart firewalld
+sudo systemctl restart firewalld
+
+
