@@ -10,4 +10,6 @@ npm install express
 
 npm install # After git clone
 
-
+# PostgreSQL requirements
+sudo apt install postgresql
+npm install pg
