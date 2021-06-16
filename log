@@ -10,6 +10,71 @@ npm install express
 
 npm install # After git clone
 
+# Configure service for firewalld so that port 3000 is opened
+# See instructions under firewalld_service folder
+
 # PostgreSQL requirements
-sudo apt install postgresql
+
+# Install postgresql
+sudo apt install postgresql-server # installs postgresql and libpq as dependencies
+
+# Create database cluster and initialise template1 and postgres databases
+sudo postgresql-setup --initdb
+
+# Start postgreSQL service
+sudo systemctl start postgresql
+
+# Configure postgreSQL service to start on boot
+sudo systemctl enable postgresql
+
+# Access postgreSQL prompt
+sudo -u postgres psql
+
+# This is what the database cluster looks like after fresh installation
+postgres=# \l
+                                  List of databases
+   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
+-----------+----------+----------+-------------+-------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | 
+ template0 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =c/postgres          +
+           |          |          |             |             | postgres=CTc/postgres
+(3 rows)
+
+# Drop database:
+DROP DATABASE <database>;
+
+# Create database
+CREATE DATABASE todo_database
+
+# Connect to todo_datbase and create todo table
+--\c into todo_database
+
+CREATE TABLE todo(
+    todo_id SERIAL PRIMARY KEY,
+    description VARCHAR(255)
+);
+
+# Check the location for the hba_file (hba = host-based authentication)
+SHOW hba_file;
+            hba_file             
+---------------------------------
+ /var/lib/pgsql/data/pg_hba.conf
+(1 row)
+
+# Configure password authentication (instead of indent which is the default)
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            password
+# IPv6 local connections:
+host    all             all             ::1/128                 password
+
+# Install pg package (or npm install if already in package.json)
 npm install pg
+
+# Create db.js file that exports a pool object, specifying the database user, password,
+# database and port
+
+# Import pool object into app.js and start creating routes, use await when making use of
+# the pool object
+
