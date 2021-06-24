@@ -49,12 +49,16 @@ DROP DATABASE <database>;
 CREATE DATABASE todo_database
 
 # Connect to todo_datbase and create todo table
---\c into todo_database
+\c todo_database
 
 CREATE TABLE todo(
     todo_id SERIAL PRIMARY KEY,
     description VARCHAR(255)
 );
+
+# Show tables in database
+\dt
+
 
 # Check the location for the hba_file (hba = host-based authentication)
 SHOW hba_file;
@@ -78,3 +82,9 @@ npm install pg
 # Import pool object into app.js and start creating routes, use await when making use of
 # the pool object
 
+
+
+# 25/6/2021 Changing the todo API to a quotes api to store interesting quotes under linux_profile/notes/quotes
+# updated database.sql with new database and table creation sqls
+# UPDATED .env file to change the datbase connection pool string so that it uses the quote_database
+#

@@ -8,3 +8,10 @@ CREATE TABLE todo(
 );
 
 
+CREATE DATABASE quote_database;
+
+
+CREATE TABLE quotes(
+    quote_id SERIAL PRIMARY KEY,
+    quote VARCHAR(255)
+);

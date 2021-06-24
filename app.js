@@ -8,114 +8,114 @@ app.use(morgan('combined'));
 app.use(express.json()) // => req.body
 
 // Routes //
-// Get all todos
-app.get("/todos", async(req, res)=>{
+// Get all quotes
+app.get("/quotes", async(req, res)=>{
     try{
     
-        const allTodos = await pool.query(
-            "SELECT * FROM todo"
+        const allQuotes = await pool.query(
+            "SELECT * FROM quotes"
         ); 
         
-        res.json(allTodos.rows);
+        res.json(allQuotes.rows);
     
     } catch (err) {
         console.error(err.message)
     }
 })
 
-// Get todo with specific id
-app.get("/todos/:id", async(req, res)=>{
+// Get quote with specific id
+app.get("/quotes/:id", async(req, res)=>{
     try{
         const { id } = req.params 
         
-        const todo = await pool.query(
-            "SELECT * FROM todo where todo_id = $1", 
+        const quote = await pool.query(
+            "SELECT * FROM quotes where quote_id = $1", 
             [id]
         ); 
         
-        res.json(todo.rows[0]);
+        res.json(quote.rows[0]);
     
     } catch (err) {
         console.error(err.message)
     }
 })
 
-// create a todo
-app.post("/todos", async(req,res)=>{
+// create a quote
+app.post("/quotes", async(req,res)=>{
     try{
-        const { description } = req.body // Destructure
+        const { quote } = req.body // Destructure
         
-        const newTodo = await pool.query(
-            "INSERT INTO todo (description) VALUES ($1) RETURNING *", 
-            [description]
+        const newQuote = await pool.query(
+            "INSERT INTO quotes (quote) VALUES ($1) RETURNING *", 
+            [quote]
         );
 
-        res.json(newTodo.rows[0]);
+        res.json(newQuote.rows[0]);
     } catch (err) {
         console.error(err.message)
     }
 })
 
-// update a todo
-app.put("/todos/:id", async(req, res) =>{
+// update a quote
+app.put("/quotes/:id", async(req, res) =>{
     try{
         console.log("Update endpoint triggered");
 
         const { id } = req.params
-        const { description } = req.body 
+        const { quote } = req.body 
 
-        const originalTodo = await pool.query(
-            "SELECT * FROM todo WHERE todo_id = $1",
+        const originalQuote = await pool.query(
+            "SELECT * FROM quotes WHERE quote_id = $1",
             [ id ]
         )
          
-        console.log(`Original Todo: ${JSON.stringify(originalTodo.rows[0])}`);
+        console.log(`Original Quote: ${JSON.stringify(originalQuote.rows[0])}`);
 
-        const updatedTodo = await pool.query(
-            "UPDATE todo SET description = $1 WHERE todo_id = $2 RETURNING *",
-            [ description, id ] 
+        const updatedQuote = await pool.query(
+            "UPDATE quotes SET quote = $1 WHERE quote_id = $2 RETURNING *",
+            [ quote, id ] 
         );
         
         
-        console.log(`Updated Todo: ${JSON.stringify(updatedTodo.rows[0])}`);
+        console.log(`Updated Quote: ${JSON.stringify(updatedQuote.rows[0])}`);
         
         
-        res.json("Todo was updated!"); 
+        res.json("Quote was updated!"); 
     } catch(err){
         console.error(err.message)
     }
 })
 
-// Delete todo with specific id
-app.delete("/todos/:id", async(req, res)=>{
+// Delete ALL quotes 
+app.delete("/quotes", async(req, res)=>{
     try{
-        const { id } = req.params 
-        
-        const todo = await pool.query(
-            "DELETE FROM todo where todo_id = $1", 
-            [id]
+        const quote = await pool.query(
+            "TRUNCATE quotes RESTART IDENTITY", // TRUNCATE INSTEAD OF DELETE TO RESET quote_id.
         ); 
         
-        res.json("Todo successfully deleted");
+        res.json("All quotes successfully deleted");
     
     } catch (err) {
         console.error(err.message)
     }
 })
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Delete quote with specific id
+app.delete("/quotes/:id", async(req, res)=>{
+    try{
+        const { id } = req.params 
+        
+        const quote = await pool.query(
+            "DELETE FROM quotes where quote_id = $1", 
+            [id]
+        ); 
+        
+        res.json("Quote successfully deleted");
+    
+    } catch (err) {
+        console.error(err.message)
+    }
+})
 
 
 
