@@ -1,9 +1,9 @@
 const express = require('express');
-const morgan = require('morgan');
+//const morgan = require('morgan');
 const app = express();
 const pool = require("./db");
 
-app.use(morgan('combined'));
+//app.use(morgan('combined'));
 app.use(express.json()) // => req.body
 
 // Routes //
@@ -44,6 +44,11 @@ app.post("/quotes", async(req,res)=>{
     try{
         const { quote } = req.body // Destructure
         
+        if(!quote){
+            res.sendStatus(400)
+            return
+        }
+
         const newQuote = await pool.query(
             "INSERT INTO quotes (quote) VALUES ($1) RETURNING *", 
             [quote]
