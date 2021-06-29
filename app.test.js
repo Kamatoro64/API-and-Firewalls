@@ -12,28 +12,68 @@ describe("GET /quotes", () => {
 
 
 describe("POST /quotes", () => {
-    describe("Given a quote", () => {
-        // should save the quote to the database
-        // should respond with a json object containing user id
-        // should respond with a 200 status code
+    
+    describe("Given a quote in JSON format", () => {
+        
         test("should respond with a 200 status code", async () => {
             await request(app)
                 .post("/quotes")
                 .send({"quote": "To be, or not to be, that is the question"})
-                .then(res => {
-                    expect(res.statusCode).toBe(200)
-                })
+                .expect(200)
         })
-        // should specify json in the content type header
+        
+        test("should specify json in the content type header", async () => {
+            await request(app)
+                .post("/quotes")
+                .send({"quote": "To be, or not to be, that is the question"})
+                .expect('Content-Type', /json/)
+        })
+        
+        test("should respond with quote that was posted", async () => {
+            const response = await request(app)
+                .post("/quotes")
+                .send({"quote": "To be, or not to be, that is the question"})
 
-    describe("when the quote is missing", () => {
+            expect(response.body.quote).toBe("To be, or not to be, that is the question") 
+                
+        })
+
+        test("should increase the number of quotes in the database by 1", async () => {
+            
+            try{
+                const initialQuoteCount = await pool.query("SELECT * FROM quotes");
+                
+            await request(app)
+                .post("/quotes")
+                .send({"quote": "To be, or not to be, that is the question"})
+
+                const finalQuoteCount = await pool.query("SELECT * FROM quotes");
+                
+                expect(finalQuoteCount.rows.length).toBe(initialQuoteCount.rows.length + 1) 
+            
+            } catch (err) {
+                console.error(err.message)
+            }
+
+                
+        })
+
+    })
+    
+    describe("When the quote is missing", () => {
         // should respond with a 400 status code
+        test("should respond with a 400 status code", async () => {
+            await request(app)
+                .post("/quotes")
+                .send()
+                .expect(400)
+        })
     })
 })
-})
 
 
-
+// This closes the db pool. Note that const pool = require("./db") loads the same same object
+// loaded by app.js Modules are cached after the first time they are loaded.
 afterAll(async () => {
     pool.end();
 });
