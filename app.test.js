@@ -2,6 +2,10 @@ const app = require("./app.js");
 const request = require('supertest');
 const pool = require("./db");
 
+
+console.log(`APP_ENV set to ${process.env.APP_ENV}`)
+console.log(`Database settings: ${process.env.DATABASE} on ${process.env.DB_HOST}:${process.env.DB_PORT}`)
+
 describe("GET /quotes", () => {
     test("Should respond with a 200 status code", async () => {
         const res = await request(app)

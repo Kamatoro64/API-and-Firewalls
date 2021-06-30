@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "jest --watchAll"
+    "test": "docker-compose up -d && APP_ENV=test jest && docker-compose down "
   },
   "repository": {
     "type": "git",
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Kamatoro64/API-and-Firewalls#readme",
   "dependencies": {
-    "dotenv": "^10.0.0",
+    "custom-env": "^2.0.1",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
     "pg": "^8.6.0"
