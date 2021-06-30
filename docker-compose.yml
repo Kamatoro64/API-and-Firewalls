@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+    postgresql-test-db:
+        build: .
+        ports: 
+            - 1234:5432
