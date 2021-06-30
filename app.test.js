@@ -3,8 +3,20 @@ const request = require('supertest');
 const pool = require("./db");
 
 
-console.log(`APP_ENV set to ${process.env.APP_ENV}`)
-console.log(`Database settings: ${process.env.DATABASE} on ${process.env.DB_HOST}:${process.env.DB_PORT}`)
+describe(`Check test parameters`, () => {
+    test("APP_ENV should be set to test (.env.test is in effect)", () =>{
+        expect(process.env.APP_ENV).toBe("test")
+    })
+    test("DB_HOST should be set to localhost", () =>{
+        expect(process.env.DB_HOST).toBe("localhost")
+    })
+    test("DB_PORT should be set to 1234 (port bounded to the postgresql port in the docker container)", () =>{
+        expect(process.env.DB_PORT).toBe("1234")
+    })
+})
+
+// Create a Javascript object to be passed to the tests to avoid duplication
+const testQuote = {quote: "To be, or not to be, that is the question"}
 
 describe("GET /quotes", () => {
     test("Should respond with a 200 status code", async () => {
@@ -15,6 +27,7 @@ describe("GET /quotes", () => {
 })
 
 
+
 describe("POST /quotes", () => {
     
     describe("Given a quote in JSON format", () => {
@@ -22,38 +35,38 @@ describe("POST /quotes", () => {
         test("should respond with a 200 status code", async () => {
             await request(app)
                 .post("/quotes")
-                .send({"quote": "To be, or not to be, that is the question"})
+                .send(testQuote)
                 .expect(200)
         })
         
         test("should specify json in the content type header", async () => {
             await request(app)
                 .post("/quotes")
-                .send({"quote": "To be, or not to be, that is the question"})
+                .send(testQuote)
                 .expect('Content-Type', /json/)
         })
         
         test("should respond with quote that was posted", async () => {
             const response = await request(app)
                 .post("/quotes")
-                .send({"quote": "To be, or not to be, that is the question"})
+                .send(testQuote)
 
-            expect(response.body.quote).toBe("To be, or not to be, that is the question") 
+            expect(response.body.quote).toBe(testQuote.quote) 
                 
         })
 
         test("should increase the number of quotes in the database by 1", async () => {
             
             try{
-                const initialQuoteCount = await pool.query("SELECT * FROM quotes");
+                const currentQuotes = await pool.query("SELECT * FROM quotes");
                 
             await request(app)
                 .post("/quotes")
-                .send({"quote": "To be, or not to be, that is the question"})
+                .send(testQuote)
 
-                const finalQuoteCount = await pool.query("SELECT * FROM quotes");
-                
-                expect(finalQuoteCount.rows.length).toBe(initialQuoteCount.rows.length + 1) 
+                const updatedQuotes = await pool.query("SELECT * FROM quotes");
+
+                expect(updatedQuotes.rows.length).toBe(currentQuotes.rows.length + 1) 
             
             } catch (err) {
                 console.error(err.message)
