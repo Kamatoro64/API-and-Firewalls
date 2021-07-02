@@ -8,10 +8,10 @@ describe(`Check test parameters`, () => {
         expect(process.env.APP_ENV).toBe("test")
     })
     test("DB_HOST should be set to localhost", () =>{
-        expect(process.env.DB_HOST).toBe("localhost")
+        expect(process.env.DB_HOST).toBe("postgres-test-db")
     })
     test("DB_PORT should be set to 1234 (port bounded to the postgresql port in the docker container)", () =>{
-        expect(process.env.DB_PORT).toBe("1234")
+        expect(process.env.DB_PORT).toBe("5432")
     })
 })
 
