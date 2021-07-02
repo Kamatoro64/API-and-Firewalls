@@ -10,4 +10,9 @@ services:
       - '1234:5432'
     volumes:
       - ./postgres_init_scripts/test:/docker-entrypoint-initdb.d/
-
+    
+  node-app:
+    build:
+        context: .
+    depends_on:
+      - postgres-test-db

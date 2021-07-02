@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "docker-compose up -d && APP_ENV=test jest && docker-compose down "
+    "test": "APP_ENV=test jest"
   },
   "repository": {
     "type": "git",
