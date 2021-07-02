@@ -2,7 +2,7 @@ const app = require("./app.js");
 const request = require('supertest');
 const pool = require("./db");
 
-
+// Test configuration checks
 describe(`Check test parameters`, () => {
     test("APP_ENV should be set to test (.env.test is in effect)", () =>{
         expect(process.env.APP_ENV).toBe("test")
@@ -18,13 +18,6 @@ describe(`Check test parameters`, () => {
 // Create a Javascript object to be passed to the tests to avoid duplication
 const testQuote = {quote: "To be, or not to be, that is the question"}
 
-describe("GET /quotes", () => {
-    test("Should respond with a 200 status code", async () => {
-        const res = await request(app)
-            .get("/quotes")
-            .expect(200)
-    })
-})
 
 
 
@@ -89,6 +82,36 @@ describe("POST /quotes", () => {
 })
 
 
+describe("GET /quotes", () => {
+    test("Should respond with a 200 status code", async () => {
+        const res = await request(app)
+            .get("/quotes")
+            .expect(200)
+    })
+    
+    test("should specify json in the content type header", async () => {
+        await request(app)
+            .get("/quotes")
+            .expect('Content-Type', /json/)
+    })
+    
+    test("should return same number of quotes as number of quotes in the database", async () => {
+        try{
+            const dbCount = await pool.query("SELECT * FROM quotes")
+                .then(result => result.rows.length)
+
+            const responseCount = await request(app)
+                .get("/quotes")
+                .then(res => res.body.length)
+            
+            expect(responseCount).toBe(dbCount)
+        
+        } catch(err){
+            console.error(err.message)
+        }
+
+    })
+})
 // This closes the db pool. Note that const pool = require("./db") loads the same same object
 // loaded by app.js Modules are cached after the first time they are loaded.
 afterAll(async () => {
