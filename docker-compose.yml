@@ -14,5 +14,7 @@ services:
   node-app:
     build:
         context: .
+    environment:
+        - APP_ENV=test
     depends_on:
       - postgres-test-db
