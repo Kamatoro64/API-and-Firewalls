@@ -18,15 +18,3 @@ jobs:
         run: docker-compose up -d
       - name: Test
         run: docker-compose run node-app
-© 2021 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
