@@ -18,9 +18,6 @@ describe(`Check test parameters`, () => {
 // Create a Javascript object to be passed to the tests to avoid duplication
 const testQuote = {quote: "To be, or not to be, that is the question"}
 
-
-
-
 describe("POST /quotes", () => {
     
     describe("Given a quote in JSON format", () => {
