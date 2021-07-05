@@ -7,6 +7,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Remove snap docker
+        run: sudo snap remove docker 
+      - name: Install docker, docker-compose
+        run: sudo apt install docker.io docker-compose
       - uses: actions/checkout@v2
         with:
           ref: automated-testing
