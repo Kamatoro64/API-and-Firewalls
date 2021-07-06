@@ -10,7 +10,7 @@ services:
       - '1234:5432'
     volumes:
       - ./postgres_init_scripts/test:/docker-entrypoint-initdb.d/
-    
+      - postgres-test-db-data:/var/lib/postgresql/data
   node-app:
     build:
         context: .
@@ -18,3 +18,5 @@ services:
         - APP_ENV=test
     depends_on:
       - postgres-test-db
+volumes:
+    postgres-test-db-data:

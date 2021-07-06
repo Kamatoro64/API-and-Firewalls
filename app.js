@@ -32,6 +32,12 @@ app.get("/quotes/:id", async(req, res)=>{
             [id]
         ); 
         
+        // Quote not found
+        if(quote.rows.length === 0){
+            res.sendStatus(400)
+            return
+        }
+
         res.json(quote.rows[0]);
     
     } catch (err) {
